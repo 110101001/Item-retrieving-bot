@@ -1,6 +1,0 @@
-/home/wpc/projects/robot/Feature_Capture/CMakeFiles/tracker.dir
-/home/wpc/projects/robot/Feature_Capture/CMakeFiles/edit_cache.dir
-/home/wpc/projects/robot/Feature_Capture/CMakeFiles/rebuild_cache.dir
-/home/wpc/projects/robot/Feature_Capture/src/CMakeFiles/src.dir
-/home/wpc/projects/robot/Feature_Capture/src/CMakeFiles/edit_cache.dir
-/home/wpc/projects/robot/Feature_Capture/src/CMakeFiles/rebuild_cache.dir
