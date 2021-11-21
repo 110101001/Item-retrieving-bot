@@ -78,4 +78,4 @@ public:
         gpioSetPWMfrequency(motorPins[0],f);
     }
 
-}
+};
