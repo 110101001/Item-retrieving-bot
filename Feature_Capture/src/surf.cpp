@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <vector>
 #include "surf.h"
+#include "item.h"
 #define MIN_HESSIAN 400
 
 using namespace cv;
@@ -22,7 +23,7 @@ void detect_base_desc(Mat &img,vector<KeyPoint> &kp, Mat &desc){
 	detector->detectAndCompute(img,mask,kp,desc);
 }
 
-Point match_key_point(Mat &src,Mat &pattern){
+Point match_coord(Mat &src,Mat &pattern,vector<KeyPoint> &kp){
 	Ptr<DescriptorMatcher> matcher = DescriptorMatcher::create(DescriptorMatcher::FLANNBASED);
 	vector< std::vector<DMatch> > knn_matches;
 	vector<DMatch> good_matches;
@@ -38,6 +39,19 @@ Point match_key_point(Mat &src,Mat &pattern){
 	return Point(0,0);
 }
 
-void display_match(Mat &src, Mat &out, Mat){
-
+Point match_draw(Mat &src,Mat &pattern){
+	Ptr<DescriptorMatcher> matcher = DescriptorMatcher::create(DescriptorMatcher::FLANNBASED);
+	vector< std::vector<DMatch> > knn_matches;
+	vector<DMatch> good_matches;
+    	matcher->knnMatch(src, pattern, knn_matches, 2);
+	const float ratio_thresh = 0.7f;
+	for (size_t i = 0; i < knn_matches.size(); i++)
+	{
+		if (knn_matches[i][0].distance < ratio_thresh * knn_matches[i][1].distance)
+		{
+		good_matches.push_back(knn_matches[i][0]);
+		}
+	}
+	return Point(0,0);
 }
+
