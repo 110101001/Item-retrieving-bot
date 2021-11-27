@@ -50,7 +50,7 @@ void match_getKp(Mat &src,Mat &pattern,vector<KeyPoint> &kp_out,vector<KeyPoint>
 	{
 		if (knn_matches[i][0].distance < ratio_thresh * knn_matches[i][1].distance)
 		{
-			kp_out.push_back(kp[knn_matches[i][0].queryIdx]);
+			kp_out.push_back(kp[knn_matches[i][0].trainIdx]);
 		}
 	}
 }

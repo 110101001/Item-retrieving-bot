@@ -10,8 +10,9 @@ class view_feature{
 	public:
 	view_feature();
 
-	void set_view(vector<KeyPoint> kp,Mat desc);
-	void clear_view();
+	void set(vector<KeyPoint> kp,Mat desc);
+	void clear();
+	void save(ofstream &os);
 
 	bool empty();
 
@@ -24,12 +25,18 @@ class view_feature{
 class item{
 	public:
 	item();
+	item(string name);
 	item(vector<view_feature> &f);
 	
 	int item_match(Mat &desc,Point &pos);
 
-	private:	
+	int push_view(view_feature &view);
+	int save();
 
+	string _name;	
+	
+	private:	
+	vector<view_feature> views;
 };
 
 #endif
