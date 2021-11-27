@@ -32,11 +32,12 @@ void Mouse_handler(int event,int x,int y,int flags,void *ustc){
         select_end=Point(x,y);
     }
     else if((event==EVENT_LBUTTONUP)&&(pressed==1)){
+        feature_algo ft;
         vector<KeyPoint> cur_view_kp;
         Mat cur_view_desc;
         pressed = 0;
         select_end=Point(x,y);
-        detect_key_point(frame,cur_view_kp,cur_view_desc,Rect(select_start,select_end));
+        ft.detect_key_point(frame,cur_view_kp,cur_view_desc,Rect(select_start,select_end));
         cur_view.set(cur_view_kp,cur_view_desc);
         select_end=Point(0,0);
         select_start=Point(0,0);
@@ -46,6 +47,7 @@ void Mouse_handler(int event,int x,int y,int flags,void *ustc){
 int main(int argc, char **argv){
     string name;
     VideoWriter writer;
+    feature_algo ft;
 
     cout << "Input item name" <<endl;
     cin>>name;
@@ -71,7 +73,7 @@ int main(int argc, char **argv){
         capture>>frame;
         frame.copyTo(display);
         cvtColor(frame,frame,COLOR_BGR2GRAY);
-        detect_key_point(frame,glo_kp,glo_desc,Rect(Point(0,0),Point(CAP_WIDTH-1,CAP_HEIGHT-1)));
+        ft.detect_key_point(frame,glo_kp,glo_desc,Rect(Point(0,0),Point(CAP_WIDTH-1,CAP_HEIGHT-1)));
 
         if(pressed) rectangle(display,select_start,select_end,Scalar(0,255,0),2);
 

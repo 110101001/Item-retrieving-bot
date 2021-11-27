@@ -117,17 +117,43 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named tracker
+# Target rules for targets named Scanner
 
 # Build rule for target.
-tracker: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tracker
-.PHONY : tracker
+Scanner: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Scanner
+.PHONY : Scanner
 
 # fast build rule for target.
-tracker/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/tracker.dir/build.make CMakeFiles/tracker.dir/build
-.PHONY : tracker/fast
+Scanner/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Scanner.dir/build.make CMakeFiles/Scanner.dir/build
+.PHONY : Scanner/fast
+
+#=============================================================================
+# Target rules for targets named Robot
+
+# Build rule for target.
+Robot: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Robot
+.PHONY : Robot
+
+# fast build rule for target.
+Robot/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Robot.dir/build.make CMakeFiles/Robot.dir/build
+.PHONY : Robot/fast
+
+#=============================================================================
+# Target rules for targets named load
+
+# Build rule for target.
+load: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 load
+.PHONY : load
+
+# fast build rule for target.
+load/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/load.dir/build.make CMakeFiles/load.dir/build
+.PHONY : load/fast
 
 #=============================================================================
 # Target rules for targets named src
@@ -142,12 +168,36 @@ src/fast:
 	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/src.dir/build.make src/CMakeFiles/src.dir/build
 .PHONY : src/fast
 
+load.o: load.cpp.o
+.PHONY : load.o
+
+# target to build an object file
+load.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/load.dir/build.make CMakeFiles/load.dir/load.cpp.o
+.PHONY : load.cpp.o
+
+load.i: load.cpp.i
+.PHONY : load.i
+
+# target to preprocess a source file
+load.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/load.dir/build.make CMakeFiles/load.dir/load.cpp.i
+.PHONY : load.cpp.i
+
+load.s: load.cpp.s
+.PHONY : load.s
+
+# target to generate assembly for a file
+load.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/load.dir/build.make CMakeFiles/load.dir/load.cpp.s
+.PHONY : load.cpp.s
+
 main.o: main.cpp.o
 .PHONY : main.o
 
 # target to build an object file
 main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/tracker.dir/build.make CMakeFiles/tracker.dir/main.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Scanner.dir/build.make CMakeFiles/Scanner.dir/main.cpp.o
 .PHONY : main.cpp.o
 
 main.i: main.cpp.i
@@ -155,7 +205,7 @@ main.i: main.cpp.i
 
 # target to preprocess a source file
 main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/tracker.dir/build.make CMakeFiles/tracker.dir/main.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Scanner.dir/build.make CMakeFiles/Scanner.dir/main.cpp.i
 .PHONY : main.cpp.i
 
 main.s: main.cpp.s
@@ -163,8 +213,32 @@ main.s: main.cpp.s
 
 # target to generate assembly for a file
 main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/tracker.dir/build.make CMakeFiles/tracker.dir/main.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Scanner.dir/build.make CMakeFiles/Scanner.dir/main.cpp.s
 .PHONY : main.cpp.s
+
+robot_main.o: robot_main.cpp.o
+.PHONY : robot_main.o
+
+# target to build an object file
+robot_main.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Robot.dir/build.make CMakeFiles/Robot.dir/robot_main.cpp.o
+.PHONY : robot_main.cpp.o
+
+robot_main.i: robot_main.cpp.i
+.PHONY : robot_main.i
+
+# target to preprocess a source file
+robot_main.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Robot.dir/build.make CMakeFiles/Robot.dir/robot_main.cpp.i
+.PHONY : robot_main.cpp.i
+
+robot_main.s: robot_main.cpp.s
+.PHONY : robot_main.s
+
+# target to generate assembly for a file
+robot_main.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Robot.dir/build.make CMakeFiles/Robot.dir/robot_main.cpp.s
+.PHONY : robot_main.cpp.s
 
 # Help Target
 help:
@@ -174,11 +248,19 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... Robot"
+	@echo "... Scanner"
+	@echo "... load"
 	@echo "... src"
-	@echo "... tracker"
+	@echo "... load.o"
+	@echo "... load.i"
+	@echo "... load.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... robot_main.o"
+	@echo "... robot_main.i"
+	@echo "... robot_main.s"
 .PHONY : help
 
 
