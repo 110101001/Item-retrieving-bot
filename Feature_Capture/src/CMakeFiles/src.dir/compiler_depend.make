@@ -413,7 +413,8 @@ src/CMakeFiles/src.dir/item.cpp.o: src/item.cpp \
   /usr/local/include/opencv4/opencv2/video/tracking.hpp \
   /usr/local/include/opencv4/opencv2/video/background_segm.hpp \
   /usr/local/include/opencv4/opencv2/xfeatures2d.hpp \
-  /usr/local/include/opencv4/opencv2/xfeatures2d/nonfree.hpp
+  /usr/local/include/opencv4/opencv2/xfeatures2d/nonfree.hpp \
+  include/surf.h
 
 src/CMakeFiles/src.dir/surf.cpp.o: src/surf.cpp \
   /usr/include/stdc-predef.h \
@@ -828,7 +829,8 @@ src/CMakeFiles/src.dir/surf.cpp.o: src/surf.cpp \
   /usr/local/include/opencv4/opencv2/xfeatures2d.hpp \
   /usr/local/include/opencv4/opencv2/xfeatures2d/nonfree.hpp \
   include/surf.h \
-  include/opencv.h
+  include/opencv.h \
+  include/item.h
 
 
 /usr/local/include/opencv4/opencv2/xfeatures2d/nonfree.hpp:

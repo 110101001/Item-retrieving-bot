@@ -338,4 +338,5 @@ src/CMakeFiles/src.dir/surf.cpp.o: \
  /usr/local/include/opencv4/opencv2/xfeatures2d.hpp \
  /usr/local/include/opencv4/opencv2/xfeatures2d/nonfree.hpp \
  /home/wpc/projects/robot/Feature_Capture/include/surf.h \
- /home/wpc/projects/robot/Feature_Capture/include/opencv.h
+ /home/wpc/projects/robot/Feature_Capture/include/opencv.h \
+ /home/wpc/projects/robot/Feature_Capture/include/item.h

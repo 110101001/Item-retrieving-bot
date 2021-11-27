@@ -6,11 +6,20 @@
 using namespace cv;
 using namespace std;
 
-typedef struct view_feature{
-	vector<KeyPoint> kp;
-	Mat desc;
+class view_feature{
+	public:
 	view_feature();
-}view_feature;
+
+	void set_view(vector<KeyPoint> kp,Mat desc);
+	void clear_view();
+
+	bool empty();
+
+	void match_draw(Mat &frame,Mat &desc,vector<KeyPoint> &kp);
+	private:
+	vector<KeyPoint> _kp;
+	Mat _desc;
+};
 
 class item{
 	public:
