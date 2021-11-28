@@ -1,6 +1,7 @@
 #include"opencv.h"
 #include"surf.h"
 #include"item.h"
+#include"robot_control.h"
 
 #include<iostream>
 #include<fstream>
@@ -19,6 +20,7 @@ int main(int argc, char **argv){
     VideoWriter writer;
     ifstream is;
     feature_algo ft;
+    int fail_count;
     char c = 0;
 
     cout << "Input item name" <<endl;
@@ -48,6 +50,15 @@ int main(int argc, char **argv){
         ft.detect_key_point(frame,glo_kp,glo_desc,Rect(Point(0,0),Point(CAP_WIDTH-1,CAP_HEIGHT-1)));
         if(cur_item.item_match(glo_desc,glo_kp,pt)){
             cout<<pt<<endl;
+            if(CAP_WIDTH - 2 * pt.x > 0){
+                turnRight(CAP_WIDTH - 2 * pt.x);
+            }
+            else{
+                turnLeft(2 * pt.x - CAP_WIDTH);
+            }
+        }
+        else{
+            turnRight(50);
         }
         c=waitKey(100);
     }
