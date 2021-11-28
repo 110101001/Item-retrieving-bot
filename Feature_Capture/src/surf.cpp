@@ -4,6 +4,7 @@
 #include "surf.h"
 #include "item.h"
 #define MIN_HESSIAN 400
+#define MIN_FEATURE 20
 
 using namespace cv;
 using namespace std;
@@ -43,7 +44,7 @@ bool feature_algo::match_coord(Mat &src, Mat &pattern, vector<KeyPoint> &kp, Poi
 			count++;
 		}
 	}
-	if (count > 10)
+	if (count > MIN_FEATURE)
 	{
 		pt.x = x / count;
 		pt.y = y / count;
