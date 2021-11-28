@@ -1,5 +1,9 @@
 *.cmake
 *.o
 Feature_Capture/CMakeFiles/
-Feature_Capture/tracker
+Feature_Capture/Scanner
+Feature_Capture/Robot
+Feature_Capture/load
+*Cache*
+*.a
 *.features
