@@ -1,0 +1,5 @@
+*.cmake
+*.o
+Feature_Capture/CMakeFiles/
+Feature_Capture/tracker
+*.features
