@@ -49,7 +49,7 @@ int main(int argc, char **argv){
         if(cur_item.item_match(glo_desc,glo_kp,pt)){
             cout<<pt<<endl;
         }
-        c=waitKey(20);
+        c=waitKey(100);
     }
     return 0;
 }
