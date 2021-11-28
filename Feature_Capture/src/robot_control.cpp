@@ -4,6 +4,7 @@
 #include <unistd.h>
 
 void initRobot(){
+    gpioInitialise();
     initialMotors();
 }
 

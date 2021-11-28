@@ -7,3 +7,4 @@ Feature_Capture/load
 *Cache*
 *.a
 *.features
+Feature_Capture/.vscode/settings.json
