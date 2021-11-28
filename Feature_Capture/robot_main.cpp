@@ -30,6 +30,8 @@ int main(int argc, char **argv){
     is.open(file_name);
     item cur_item(name,is);
 
+    cout << "Initialize Motor..." <<endl;
+    initRobot();
     cout << "Opening camera..." << endl;
     VideoCapture capture(0); // open the first camera
     cout << "Setting camera..." << endl;

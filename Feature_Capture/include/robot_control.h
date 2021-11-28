@@ -3,10 +3,11 @@
 #include <pigpio.h>
 #include "motor.h"
 
-void moveForward(int speed, int time);
-void moveBackward(int speed, int time);
+void initRobot();
+void moveForward(int speed);
+void moveBackward(int speed);
 void robotStop();
-void turnLeft(int angle);
-void turnRight(int angle);
+void turnLeft(int speed);
+void turnRight(int speed);
 
 #endif

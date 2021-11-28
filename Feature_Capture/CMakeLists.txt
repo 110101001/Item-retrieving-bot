@@ -21,7 +21,7 @@ target_link_libraries(Scanner src)
 target_link_libraries(Scanner ${OpenCV_LIBS})
 target_link_libraries(Robot src)
 target_link_libraries(Robot ${OpenCV_LIBS})
-target_link_libraries(Robot LINK_PRIVATE ${pigpio_LIBS})
+target_link_libraries(Robot ${pigpio_LIBRARY} ${pigpiod_if_LIBRARY} ${pigpiod_if2_LIBRARY})
 target_link_libraries(load src)
 target_link_libraries(load ${OpenCV_LIBS})
 
