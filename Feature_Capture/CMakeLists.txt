@@ -6,8 +6,10 @@ SET(CMAKE_CXX_COMPILER "/usr/bin/g++")
 SET(CMAKE_BUILD_TYPE "Debug")
 SET(CMAKE_CXX_FLAGS_DEBUG "$ENV{CXXFLAGS} -O0 -w -g -ggdb")
 SET(CMAKE_CXX_FLAGS_RELEASE "$ENV{CXXFLAGS} -O3 -Wall")
+include("Findpigpio.cmake")
 
 find_package(OpenCV REQUIRED)
+
 include_directories(${OpenCV_INCLUDE_DIRS})
 include_directories("include/")
 ADD_SUBDIRECTORY(src)
@@ -19,6 +21,7 @@ target_link_libraries(Scanner src)
 target_link_libraries(Scanner ${OpenCV_LIBS})
 target_link_libraries(Robot src)
 target_link_libraries(Robot ${OpenCV_LIBS})
+target_link_libraries(Robot LINK_PRIVATE ${pigpio_LIBS})
 target_link_libraries(load src)
 target_link_libraries(load ${OpenCV_LIBS})
 
