@@ -3,6 +3,10 @@
 #include "opencv.h"
 #include "robot_control.h"
 
+#define TOLERATE_RANGE 50
+#define FORWARD_SPEED 200
+#define TURN_MIN_SPEED 50
+
 enum state{
 	STATE_RESET,STATE_SEARCH,STATE_MOVE
 };

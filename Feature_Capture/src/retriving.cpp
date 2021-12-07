@@ -1,4 +1,5 @@
 #include "retriving.h"
+#include <math>
 
 state_machine::state_machine() : state(STATE_RESET), target(NULL)
 {
@@ -74,12 +75,29 @@ int state_machine::search_run(Mat &desc,vector<KeyPoint> &kp){
 //Return ERR_FAIL if lose track of target
 //Return ERR_NULL otherwise.
 int state_machine::move_run(Mat &desc,vector<KeyPoint> &kp){
-
+	Point pt;
+	bool ret = target->item_match(desc,kp,pt);
+	if(ret == false){
+		return ERR_FAIL;
+	}
+	int diff = CAP_WIDTH - 2 * pt.x;
+	if(abs(diff) < TOLERATE_RANGE){
+		moveForward(FORWARD_SPEED);
+	}
+	else{
+		if(diff > 0){
+			turnRight(TURN_MIN_SPEED + diff);
+		}
+		else{
+			turnLeft(TURN_MIN_SPEED - diff);
+		}
+	}
+	return ERR_NULL;
 }
 
 //Return ERR_SUCC if target is not NULL
 //Return ERR_NULL otherwise.
 int state_machine::reset_run()
 {
-	return target != NULL;
+	return target != NULL ? ERR_SUCC: ERR_NULL;
 }

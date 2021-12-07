@@ -10,9 +10,6 @@
 using namespace std;
 using namespace cv;
 
-#define CAP_WIDTH 640
-#define CAP_HEIGHT 480
-
 Mat frame,gray_frame;
 
 int main(int argc, char **argv){

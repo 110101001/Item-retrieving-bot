@@ -11,4 +11,7 @@
 #include "opencv2/features2d.hpp"
 #include "opencv2/xfeatures2d.hpp"
 
+#define CAP_WIDTH 640
+#define CAP_HEIGHT 480
+
 #endif
