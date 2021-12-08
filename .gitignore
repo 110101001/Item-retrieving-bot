@@ -8,3 +8,7 @@ Feature_Capture/load
 *.a
 *.features
 Feature_Capture/.vscode/settings.json
+Feature_Capture/src/CMakeFiles/*
+Feature_Capture/src/Makefile
+Feature_Capture/Makefile
+
