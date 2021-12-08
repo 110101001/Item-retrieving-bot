@@ -67,6 +67,20 @@ void state_machine::set_target(item &_target){
 int state_machine::search_run(Mat &desc,vector<KeyPoint> &kp){
 	Point pt;
 	bool ret = target->item_match(desc,kp,pt);
+	static int times = 0;
+	if(ret == false){
+		turnRight(200);
+		times++;
+		if(times>100){
+			times = 0;
+			return ERR_FAIL;
+		}
+		return ERR_NULL;
+	}else{
+		times = 0;
+		robotStop();
+		return ERR_SUCC;
+	}
 }
 
 //Turn to target if not facing the target
