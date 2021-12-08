@@ -89,10 +89,15 @@ int state_machine::search_run(Mat &desc,vector<KeyPoint> &kp){
 //Return ERR_FAIL if lose track of target
 //Return ERR_NULL otherwise.
 int state_machine::move_run(Mat &desc,vector<KeyPoint> &kp){
+	int dis;
 	Point pt;
-	bool ret = target->item_match(desc,kp,pt);
+	bool ret = target->item_match(desc,kp,pt,dis);
 	if(ret == false){
 		return ERR_FAIL;
+	}
+	if(dis > CLOSE_DIAMETER){
+		robotStop();
+		return ERR_SUCC;
 	}
 	int diff = CAP_WIDTH - 2 * pt.x;
 	if(abs(diff) < TOLERATE_RANGE){

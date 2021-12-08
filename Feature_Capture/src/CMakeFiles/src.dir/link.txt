@@ -1,2 +1,2 @@
-/usr/bin/ar qc libsrc.a  CMakeFiles/src.dir/item.cpp.o CMakeFiles/src.dir/motor.cpp.o CMakeFiles/src.dir/robot_control.cpp.o CMakeFiles/src.dir/surf.cpp.o
+/usr/bin/ar qc libsrc.a CMakeFiles/src.dir/item.cpp.o CMakeFiles/src.dir/motor.cpp.o CMakeFiles/src.dir/retriving.cpp.o CMakeFiles/src.dir/robot_control.cpp.o CMakeFiles/src.dir/surf.cpp.o
 /usr/bin/ranlib libsrc.a

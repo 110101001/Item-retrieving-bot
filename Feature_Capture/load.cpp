@@ -46,6 +46,7 @@ int main(int argc, char **argv){
     namedWindow("Video");
     capture>>frame;
     while(c!='q'){
+        int d;
         Point pt;
         vector<KeyPoint> glo_kp;
         Mat glo_desc;
@@ -53,7 +54,7 @@ int main(int argc, char **argv){
         frame.copyTo(display);
         cvtColor(frame,frame,COLOR_BGR2GRAY);
         ft.detect_key_point(frame,glo_kp,glo_desc,Rect(Point(0,0),Point(CAP_WIDTH-1,CAP_HEIGHT-1)));
-        if(cur_item.item_match(glo_desc,glo_kp,pt)){
+        if(cur_item.item_match(glo_desc,glo_kp,pt,d)){
             cout<<pt<<endl;
             circle(display,pt,10,Scalar(0,255,0),2);
         }

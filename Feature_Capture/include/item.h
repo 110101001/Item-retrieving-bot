@@ -19,10 +19,11 @@ class view_feature{
 	bool empty();
 
 	void match_draw(Mat &frame,Mat &desc,vector<KeyPoint> &kp);
-	bool match_coord(Mat &desc,vector<KeyPoint> &kp,Point &pt);
+	bool match_coord(Mat &desc,vector<KeyPoint> &kp,Point &pt,int &d);
 	private:
 	vector<KeyPoint> _kp;
 	Mat _desc;
+	int _d;
 };
 
 class item{
@@ -32,7 +33,7 @@ class item{
 	item(string name, ifstream &is);
 	item(vector<view_feature> &f);
 	
-	bool item_match(Mat &desc,vector<KeyPoint> &kp,Point &pos);
+	bool item_match(Mat &desc,vector<KeyPoint> &kp,Point &pos,int &d);
 
 	int push_view(view_feature &view);
 	int save();

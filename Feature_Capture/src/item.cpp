@@ -27,6 +27,7 @@ void view_feature::set(vector<KeyPoint> kp,Mat desc){
 	_kp = kp;
 	_desc=desc;
 }
+
 void view_feature::clear(){
 	_kp.clear();
 }
@@ -58,9 +59,12 @@ void view_feature::match_draw(Mat &frame,Mat &desc,vector<KeyPoint> &kp){
 	drawKeypoints(frame,kp_out,frame);
 }
 
-bool view_feature::match_coord(Mat &desc,vector<KeyPoint> &kp,Point &pt){
+bool view_feature::match_coord(Mat &desc,vector<KeyPoint> &kp,Point &pt,int &d){
 	feature_algo ft;
-	if(ft.match_coord(_desc,desc,kp,pt)){
+	int d_temp=_d;
+	if(ft.match_coord(_desc,desc,kp,_kp,pt,_d)){
+		d=_d;
+		_d = d_temp;
 		return true;
 	}
 	return false;
@@ -81,14 +85,15 @@ item::item(string name, ifstream &is):_name(name){
 		views.push_back(view_feature(is));
 	}
 }
+
 item::item(vector<view_feature> &f){
 	views = f;
 	return;
 }
 	
-bool item::item_match(Mat &desc,vector<KeyPoint> &kp,Point &pos){
+bool item::item_match(Mat &desc,vector<KeyPoint> &kp,Point &pos,int &d){
 	for(int i=0;i<views.size();i++){
-		if(views[i].match_coord(desc,kp,pos)){
+		if(views[i].match_coord(desc,kp,pos,d)){
 			return true;
 		}
 	}

@@ -27,27 +27,33 @@ void detect_base_desc(Mat &img, vector<KeyPoint> &kp, Mat &desc)
 	detector->detectAndCompute(img, mask, kp, desc);
 }
 
-bool feature_algo::match_coord(Mat &src, Mat &pattern, vector<KeyPoint> &kp, Point &pt)
+bool feature_algo::match_coord(Mat &src, Mat &pattern, vector<KeyPoint> &kp,vector<KeyPoint> &kp_pattern, Point &pt,int &r)
 {
 	int x = 0, y = 0, count = 0;
 	Ptr<DescriptorMatcher> matcher = DescriptorMatcher::create(DescriptorMatcher::FLANNBASED);
 	vector<std::vector<DMatch>> knn_matches;
 	vector<DMatch> good_matches;
 	matcher->knnMatch(src, pattern, knn_matches, 2);
+	vector<KeyPoint> kp_dst;
+	vector<KeyPoint> kp_src;
 	const float ratio_thresh = 0.7f;
 	for (size_t i = 0; i < knn_matches.size(); i++)
 	{
 		if (knn_matches[i][0].distance < ratio_thresh * knn_matches[i][1].distance)
 		{
-			x += kp[knn_matches[i][0].trainIdx].pt.x;
-			y += kp[knn_matches[i][0].trainIdx].pt.y;
+			kp_dst.push_back(kp[knn_matches[i][0].trainIdx]);
+			kp_src.push_back(kp_pattern[knn_matches[i][0].queryIdx]);
 			count++;
 		}
 	}
 	if (count > MIN_FEATURE)
 	{
-		pt.x = x / count;
-		pt.y = y / count;
+		vector<Point2i> pts(2,pt);
+		pts[1].x+=r;	
+		Mat H = findHomography(kp_src, kp_dst, RANSAC);
+		perspectiveTransform( pts, pts, H);
+		pt = pts[0];
+		d = (int)norm(pts[1],pts[0]);
 		return true;
 	}
 	else
@@ -71,3 +77,5 @@ void feature_algo::match_getKp(Mat &src, Mat &pattern, vector<KeyPoint> &kp_out,
 		}
 	}
 }
+
+
