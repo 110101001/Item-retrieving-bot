@@ -1,5 +1,7 @@
 #include "retriving.h"
-#include <math>
+#include <math.h>
+
+item home;
 
 state_machine::state_machine() : state(STATE_RESET), target(NULL)
 {
@@ -7,54 +9,56 @@ state_machine::state_machine() : state(STATE_RESET), target(NULL)
 
 void state_machine::run(Mat &desc,vector<KeyPoint> &kp)
 {
+	int ret;
 	switch (state)
 	{
-	case STATE_RESET:
-		int ret = reset_run();
-		switch (ret)
-		{
-		case ERR_SUCC:
-			state = STATE_SEARCH;
+		case STATE_RESET:
+			ret = reset_run();
+			switch (ret)
+			{
+				case ERR_SUCC:
+					state = STATE_SEARCH;
+					break;
+				default:
+					break;
+			}
 			break;
-		default:
+		case STATE_SEARCH:
+			ret = search_run(desc, kp);
+			switch (ret)
+			{
+				case ERR_SUCC:
+					state = STATE_MOVE;
+					break;
+				case ERR_FAIL:
+					set_target(NULL);
+					state = STATE_RESET;
+					break;
+				default:
+					break;
+			}
 			break;
-		}
-		break;
-	case STATE_SEARCH:
-		int ret = search_run(desc, kp);
-		switch (ret)
-		{
-		case ERR_SUCC:
-			state = STATE_MOVE;
-			break;
-		case ERR_FAIL:
-			set_target(NULL);
-			state = STATE_RESET;
-			break;
-		default:
-			break;
-		}
-		break;
-	case STATE_MOVE:
-		int ret = move_run(desc, kp);
-		switch (ret)
-		{
-		case ERR_SUCC if (target != &home) {
-			set_target(&home);
-			state = STATE_SEARCH;
-		} else {
-			set_target(NULL);
-			state = STATE_RESET;
-		} break;
-		    case ERR_FAIL:
-			state = STATE_SEARCH;
-			break;
-		default:
-			break;
-		}
+		case STATE_MOVE:
+			ret = move_run(desc, kp);
+			switch (ret)
+			{
+				case ERR_SUCC:
+					if (target != &home) {
+						set_target(&home);
+						state = STATE_SEARCH;
+					} else {
+						set_target(NULL);
+						state = STATE_RESET;
+					} break;
+				case ERR_FAIL:
+					state = STATE_SEARCH;
+					break;
+				default:
+					break;
+			}
 	}
 }
-void state_machine::set_target(item &_target){
+void state_machine::set_target(item *_target){
 	target = _target;
 }
 
@@ -66,7 +70,8 @@ void state_machine::set_target(item &_target){
 
 int state_machine::search_run(Mat &desc,vector<KeyPoint> &kp){
 	Point pt;
-	bool ret = target->item_match(desc,kp,pt);
+	int d;
+	bool ret = target->item_match(desc,kp,pt,d);
 	static int times = 0;
 	if(ret == false){
 		turnRight(200);
