@@ -2,11 +2,13 @@
 #include "surf.h"
 
 view_feature::view_feature(){
+	_d = 100;
 	return;
 }
 
 view_feature::view_feature(ifstream &is){
 	int temp;
+	_d = 100;
 	is.read((char *)&temp,sizeof(int));
 	for(int i=0;i<temp;i++){
 		KeyPoint t;
