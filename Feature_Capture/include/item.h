@@ -12,7 +12,7 @@ class view_feature{
 	view_feature();
 	view_feature(ifstream &is);
 
-	void set(vector<KeyPoint> kp,Mat desc);
+	void set(vector<KeyPoint> kp,Mat desc,Point pt,int d);
 	void clear();
 	void save(ofstream &os);
 
@@ -21,6 +21,7 @@ class view_feature{
 	void match_draw(Mat &frame,Mat &desc,vector<KeyPoint> &kp);
 	bool match_coord(Mat &desc,vector<KeyPoint> &kp,Point &pt,int &d);
 	private:
+	Point _pt;
 	vector<KeyPoint> _kp;
 	Mat _desc;
 	int _d;

@@ -34,26 +34,30 @@ bool feature_algo::match_coord(Mat &src, Mat &pattern, vector<KeyPoint> &kp,vect
 	vector<std::vector<DMatch>> knn_matches;
 	vector<DMatch> good_matches;
 	matcher->knnMatch(src, pattern, knn_matches, 2);
-	vector<KeyPoint> kp_dst;
-	vector<KeyPoint> kp_src;
+	vector<Point2f> kp_dst;
+	vector<Point2f> kp_src;
 	const float ratio_thresh = 0.7f;
 	for (size_t i = 0; i < knn_matches.size(); i++)
 	{
 		if (knn_matches[i][0].distance < ratio_thresh * knn_matches[i][1].distance)
 		{
-			kp_dst.push_back(kp[knn_matches[i][0].trainIdx]);
-			kp_src.push_back(kp_pattern[knn_matches[i][0].queryIdx]);
+			kp_dst.push_back(kp[knn_matches[i][0].trainIdx].pt);
+			kp_src.push_back(kp_pattern[knn_matches[i][0].queryIdx].pt);
 			count++;
 		}
 	}
+	cout<<count<<endl;
 	if (count > MIN_FEATURE)
 	{
-		vector<Point2i> pts(2,pt);
+		int xdiff,ydiff;
+		vector<Point2f> pts(2,pt);
 		pts[1].x+=r;	
 		Mat H = findHomography(kp_src, kp_dst, RANSAC);
-		perspectiveTransform( pts, pts, H);
+		perspectiveTransform(pts, pts, H);
 		pt = pts[0];
-		d = (int)norm(pts[1],pts[0]);
+		xdiff=(int)(pts[0].x - pts[1].x);
+		ydiff=(int)(pts[0].y - pts[1].y);
+		r = (int)sqrt(xdiff * xdiff + ydiff*ydiff);
 		return true;
 	}
 	else

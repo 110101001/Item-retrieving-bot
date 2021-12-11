@@ -2,13 +2,16 @@
 #define _RETRIVING
 #include "opencv.h"
 #include "robot_control.h"
+#include "item.h"
+#include "surf.h"
 
-#define TOLERATE_RANGE 50
-#define FORWARD_SPEED 200
-#define TURN_MIN_SPEED 50
-#define CLOSE_DIAMETER 100
+#define TOLERATE_RANGE 100
+#define FORWARD_SPEED 100
+#define TURN_MIN_SPEED 60
+#define CLOSE_DIAMETER 150
+#define CLOSE_COUNT 3
 
-enum state{
+enum robot_state{
 	STATE_RESET,STATE_SEARCH,STATE_MOVE
 };
 
@@ -20,7 +23,7 @@ class state_machine{
 	public:
 	state_machine();
 
-	void set_target(item &_target);
+	void set_target(item *_target);
 
 	void run(Mat &desc,vector<KeyPoint> &kp);
 	int search_run(Mat &desc,vector<KeyPoint> &kp);
@@ -29,7 +32,7 @@ class state_machine{
 
 	private:
 	feature_algo ft;
-	enum state;
+	int state;
 	item *target;
 };
 

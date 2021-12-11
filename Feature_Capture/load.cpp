@@ -38,6 +38,9 @@ int main(int argc, char **argv){
     cout << "Setting camera..." << endl;
     capture.set(CAP_PROP_FRAME_WIDTH,CAP_WIDTH);
     capture.set(CAP_PROP_FRAME_HEIGHT,CAP_HEIGHT);
+    capture.set(CAP_PROP_BUFFERSIZE, 1);
+    capture.set(CAP_PROP_FPS, 2);
+    capture.set(CAP_PROP_POS_FRAMES , 1);
     if (!capture.isOpened())
     {
         cerr << "ERROR: Can't initialize camera capture" << endl;
@@ -55,8 +58,10 @@ int main(int argc, char **argv){
         cvtColor(frame,frame,COLOR_BGR2GRAY);
         ft.detect_key_point(frame,glo_kp,glo_desc,Rect(Point(0,0),Point(CAP_WIDTH-1,CAP_HEIGHT-1)));
         if(cur_item.item_match(glo_desc,glo_kp,pt,d)){
-            cout<<pt<<endl;
+            cout<<pt<<" "<<d<<endl;
+
             circle(display,pt,10,Scalar(0,255,0),2);
+	    line(display,Point(pt.x-d,pt.y),Point(pt.x+d,pt.y),Scalar(255,255,255),2);
         }
         imshow("Video",display);
         c=waitKey(20);
