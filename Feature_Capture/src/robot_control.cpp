@@ -2,9 +2,12 @@
 #include <pigpio.h>
 #include <time.h>
 #include <unistd.h>
+#include "timer.h"
 
 #define MAX_SPEED 255
 #define BURST_TIME 60000
+
+static Timer t;
 
 void initRobot(){
     gpioInitialise();
@@ -18,8 +21,10 @@ void moveForward(int speed){
     setLeftSpeed(MAX_SPEED);
     setRightSpeed(MAX_SPEED);
     usleep(BURST_TIME);
-    setLeftSpeed(speed);
-    setRightSpeed(speed);
+    t.setTimeout([&]() {
+        robotStop();
+        t.stop();
+    }, 6); 
 }
 
 void moveBackward(int speed){
@@ -28,8 +33,10 @@ void moveBackward(int speed){
     setLeftSpeed(MAX_SPEED);
     setRightSpeed(MAX_SPEED);
     usleep(BURST_TIME);
-    setLeftSpeed(speed);
-    setRightSpeed(speed);
+    t.setTimeout([&]() {
+        robotStop();
+        t.stop();
+    }, 6); 
 }
 
 void turnLeft(int speed){
@@ -38,8 +45,10 @@ void turnLeft(int speed){
     setLeftSpeed(MAX_SPEED);
     setRightSpeed(MAX_SPEED);
     usleep(BURST_TIME);
-    setLeftSpeed(0);
-    setRightSpeed(speed);
+    t.setTimeout([&]() {
+        robotStop();
+        t.stop();
+    }, 6); 
 }
 
 void turnRight(int speed){
@@ -48,8 +57,10 @@ void turnRight(int speed){
     setLeftSpeed(MAX_SPEED);
     setRightSpeed(MAX_SPEED);
     usleep(BURST_TIME);
-    setLeftSpeed(speed);
-    setRightSpeed(0);
+    t.setTimeout([&]() {
+        robotStop();
+        t.stop();
+    }, 6); 
 }
 
 void robotStop(){

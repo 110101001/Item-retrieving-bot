@@ -46,7 +46,6 @@ bool feature_algo::match_coord(Mat &src, Mat &pattern, vector<KeyPoint> &kp,vect
 			count++;
 		}
 	}
-	cout<<count<<endl;
 	if (count > MIN_FEATURE)
 	{
 		int xdiff,ydiff;
