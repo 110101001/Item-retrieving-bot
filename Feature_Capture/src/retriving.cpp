@@ -25,12 +25,15 @@ void state_machine::run(Mat &desc,vector<KeyPoint> &kp)
 			break;
 		case STATE_SEARCH:
 			ret = search_run(desc, kp);
+			cout<<"Searching"<<endl;
 			switch (ret)
 			{
 				case ERR_SUCC:
+					cout<<"Found"<<endl;
 					state = STATE_MOVE;
 					break;
 				case ERR_FAIL:
+					cout<<"Search Failed"<<endl;
 					set_target(NULL);
 					state = STATE_RESET;
 					break;
@@ -40,9 +43,11 @@ void state_machine::run(Mat &desc,vector<KeyPoint> &kp)
 			break;
 		case STATE_MOVE:
 			ret = move_run(desc, kp);
+			cout<<"Moving"<<endl;
 			switch (ret)
 			{
 				case ERR_SUCC:
+					cout<<"Arrived"<<endl;
 					if (target != &home) {
 						set_target(&home);
 						state = STATE_SEARCH;
@@ -51,6 +56,7 @@ void state_machine::run(Mat &desc,vector<KeyPoint> &kp)
 						state = STATE_RESET;
 					} break;
 				case ERR_FAIL:
+					cout<<"Lost capture"<<endl;
 					state = STATE_SEARCH;
 					break;
 				default:
@@ -74,7 +80,7 @@ int state_machine::search_run(Mat &desc,vector<KeyPoint> &kp){
 	bool ret = target->item_match(desc,kp,pt,d);
 	static int times = 0;
 	if(ret == false){
-		turnRight(200);
+		turnRight(TURN_MIN_SPEED);
 		times++;
 		if(times>100){
 			times = 0;
@@ -97,23 +103,31 @@ int state_machine::move_run(Mat &desc,vector<KeyPoint> &kp){
 	int dis;
 	Point pt;
 	bool ret = target->item_match(desc,kp,pt,dis);
+	static int close_count = 0;
 	if(ret == false){
 		return ERR_FAIL;
 	}
 	if(dis > CLOSE_DIAMETER){
 		robotStop();
-		return ERR_SUCC;
+		if(close_count >= CLOSE_COUNT){
+			close_count = 0;
+			return ERR_SUCC;
+		}
+		close_count++;
 	}
+	close_count=0;
 	int diff = CAP_WIDTH - 2 * pt.x;
 	if(abs(diff) < TOLERATE_RANGE){
+		cout<<"Move forward"<<endl;
 		moveForward(FORWARD_SPEED);
 	}
 	else{
+		cout<<"Turn"<<endl;
 		if(diff > 0){
-			turnRight(TURN_MIN_SPEED + diff);
+			turnLeft(TURN_MIN_SPEED);
 		}
 		else{
-			turnLeft(TURN_MIN_SPEED - diff);
+			turnRight(TURN_MIN_SPEED);
 		}
 	}
 	return ERR_NULL;

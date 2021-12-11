@@ -35,10 +35,12 @@ void Mouse_handler(int event,int x,int y,int flags,void *ustc){
         feature_algo ft;
         vector<KeyPoint> cur_view_kp;
         Mat cur_view_desc;
+	int r=(select_start.x - select_end.x)/2;
+	if(r<0) r=-r;
         pressed = 0;
         select_end=Point(x,y);
         ft.detect_key_point(frame,cur_view_kp,cur_view_desc,Rect(select_start,select_end));
-        cur_view.set(cur_view_kp,cur_view_desc);
+        cur_view.set(cur_view_kp,cur_view_desc,Point((select_start.x+select_end.x)/2, (select_start.y+select_end.y)/2),r);
         select_end=Point(0,0);
         select_start=Point(0,0);
     }

@@ -22,12 +22,16 @@ view_feature::view_feature(ifstream &is){
 
 	_desc.create(row,col,type);
 	is.read((char *)(_desc.data), _desc.elemSize() * _desc.total());
+	is.read((char *)&_pt,sizeof(Point));
+	is.read((char *)&_d,sizeof(int));
 	return;
 }
 
-void view_feature::set(vector<KeyPoint> kp,Mat desc){
+void view_feature::set(vector<KeyPoint> kp,Mat desc,Point pt,int d){
 	_kp = kp;
 	_desc=desc;
+	_pt = pt;
+	_d = d;
 }
 
 void view_feature::clear(){
@@ -46,6 +50,8 @@ void view_feature::save(ofstream &os){
 	os.write((const char *)(&_desc.rows), sizeof(int));
 	os.write((const char *)(&_desc.cols), sizeof(int));
 	os.write((const char *)(_desc.data), _desc.elemSize() * _desc.total());
+	os.write((const char *)&_pt,sizeof(Point));
+	os.write((const char *)&_d,sizeof(int));
 	return;
 }
 
@@ -64,9 +70,12 @@ void view_feature::match_draw(Mat &frame,Mat &desc,vector<KeyPoint> &kp){
 bool view_feature::match_coord(Mat &desc,vector<KeyPoint> &kp,Point &pt,int &d){
 	feature_algo ft;
 	int d_temp=_d;
-	if(ft.match_coord(_desc,desc,kp,_kp,pt,_d)){
+	Point pt_temp = _pt;
+	if(ft.match_coord(_desc,desc,kp,_kp,_pt,_d)){
 		d=_d;
 		_d = d_temp;
+		pt=_pt;
+		_pt=pt_temp;
 		return true;
 	}
 	return false;
@@ -96,6 +105,7 @@ item::item(vector<view_feature> &f){
 bool item::item_match(Mat &desc,vector<KeyPoint> &kp,Point &pos,int &d){
 	for(int i=0;i<views.size();i++){
 		if(views[i].match_coord(desc,kp,pos,d)){
+			cout<<"Location: "<<pos<<" Radius: "<<d<<endl;
 			return true;
 		}
 	}

@@ -46,17 +46,18 @@ bool feature_algo::match_coord(Mat &src, Mat &pattern, vector<KeyPoint> &kp,vect
 			count++;
 		}
 	}
+	cout<<count<<endl;
 	if (count > MIN_FEATURE)
 	{
 		int xdiff,ydiff;
-		vector<Point2i> pts(2,pt);
+		vector<Point2f> pts(2,pt);
 		pts[1].x+=r;	
 		Mat H = findHomography(kp_src, kp_dst, RANSAC);
-		perspectiveTransform( pts, pts, H);
+		perspectiveTransform(pts, pts, H);
 		pt = pts[0];
-		xdiff=pts[0].x - pts[1].x;
-		ydiff=pts[0].y-pts[1].y;
-		r = xdiff * xdiff + ydiff*ydiff;
+		xdiff=(int)(pts[0].x - pts[1].x);
+		ydiff=(int)(pts[0].y - pts[1].y);
+		r = (int)sqrt(xdiff * xdiff + ydiff*ydiff);
 		return true;
 	}
 	else
