@@ -14,6 +14,7 @@ using namespace std;
 using namespace cv;
 
 Mat frame,gray_frame;
+item *home;
 
 void int_handler(int signum){
 	robotStop();
@@ -24,18 +25,19 @@ int main(int argc, char **argv){
     string name,file_name;
     VideoWriter writer;
     ifstream is;
+    ifstream homeStream("home.features");
     feature_algo ft;
     state_machine fsm;
-    int fail_count;
     char c = 0;
 
     signal(2,int_handler);
     cout << "Input item name" <<endl;
     cin>>name;
     file_name = name;
-	file_name.append(".features");
+    file_name.append(".features");
     is.open(file_name);
     item cur_item(name,is);
+    home = new item("home",homeStream);
 
     cout << "Initialize Motor..." <<endl;
     initRobot();

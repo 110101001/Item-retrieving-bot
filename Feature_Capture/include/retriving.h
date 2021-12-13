@@ -5,11 +5,17 @@
 #include "item.h"
 #include "surf.h"
 
-#define TOLERATE_RANGE 100
-#define FORWARD_SPEED 100
-#define TURN_MIN_SPEED 60
-#define CLOSE_DIAMETER 150
+#define TOLERATE_RANGE 60
+#define MOVE_TIME 80
+#define FAR_MOVE_TIME 150
+#define TURN_TIME 45
+#define RUSH_TIME 800
+#define SEARCH_TURN_TIME 80
+#define CLOSE_DIAMETER 130
+#define HOME_DIAMETER 200
+#define FAR_DIAMETER 100
 #define CLOSE_COUNT 3
+#define MOVE_MAX_FAIL 3
 
 enum robot_state{
 	STATE_RESET,STATE_SEARCH,STATE_MOVE

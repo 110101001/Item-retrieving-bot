@@ -1,7 +1,8 @@
 #include "retriving.h"
 #include <math.h>
+#include <unistd.h>
 
-item home;
+extern item *home;
 
 state_machine::state_machine() : state(STATE_RESET), target(NULL)
 {
@@ -48,8 +49,8 @@ void state_machine::run(Mat &desc,vector<KeyPoint> &kp)
 			{
 				case ERR_SUCC:
 					cout<<"Arrived"<<endl;
-					if (target != &home) {
-						set_target(&home);
+					if (target != home) {
+						set_target(home);
 						state = STATE_SEARCH;
 					} else {
 						set_target(NULL);
@@ -80,9 +81,10 @@ int state_machine::search_run(Mat &desc,vector<KeyPoint> &kp){
 	bool ret = target->item_match(desc,kp,pt,d);
 	static int times = 0;
 	if(ret == false){
-		turnRight(TURN_MIN_SPEED);
+		turnRight(SEARCH_TURN_TIME);
 		times++;
-		if(times>100){
+		sleep(1);
+		if(times>50){
 			times = 0;
 			return ERR_FAIL;
 		}
@@ -104,30 +106,48 @@ int state_machine::move_run(Mat &desc,vector<KeyPoint> &kp){
 	Point pt;
 	bool ret = target->item_match(desc,kp,pt,dis);
 	static int close_count = 0;
+	static int fail_count = 0;
 	if(ret == false){
-		return ERR_FAIL;
-	}
-	if(dis > CLOSE_DIAMETER){
-		robotStop();
-		if(close_count >= CLOSE_COUNT){
-			close_count = 0;
-			return ERR_SUCC;
+		if(fail_count >= MOVE_MAX_FAIL){
+			fail_count = 0;
+			return ERR_FAIL;
 		}
-		close_count++;
+		fail_count++;
+		sleep(1);
+		return ERR_NULL;
 	}
-	close_count=0;
 	int diff = CAP_WIDTH - 2 * pt.x;
 	if(abs(diff) < TOLERATE_RANGE){
-		cout<<"Move forward"<<endl;
-		moveForward(FORWARD_SPEED);
+		if((target != home && dis > CLOSE_DIAMETER) ||
+			(target == home && dis > HOME_DIAMETER)){
+			robotStop();
+			if(close_count >= CLOSE_COUNT){
+				close_count = 0;
+				if(target != home)
+					moveForward(RUSH_TIME);
+				return ERR_SUCC;
+			}
+			close_count++;
+			return ERR_NULL;
+		}
+		else if(dis < FAR_DIAMETER){
+			close_count=0;
+			cout<<"Move forward"<<endl;
+			moveForward(FAR_MOVE_TIME);
+		}	
+		else{
+			close_count=0;
+			cout<<"Move forward"<<endl;
+			moveForward(MOVE_TIME);
+		}
 	}
 	else{
 		cout<<"Turn"<<endl;
-		if(diff > 0){
-			turnLeft(TURN_MIN_SPEED);
+		if(diff < 0){
+			turnLeft(TURN_TIME);
 		}
 		else{
-			turnRight(TURN_MIN_SPEED);
+			turnRight(TURN_TIME);
 		}
 	}
 	return ERR_NULL;

@@ -3,11 +3,13 @@ cmake_minimum_required(VERSION 3.5)
 
 SET(CMAKE_C_COMPILER "/usr/bin/gcc")
 SET(CMAKE_CXX_COMPILER "/usr/bin/g++")
-SET(CMAKE_BUILD_TYPE "Debug")
+SET(CMAKE_BUILD_TYPE "Release")
 SET(CMAKE_CXX_FLAGS_DEBUG "$ENV{CXXFLAGS} -O0 -w -g -ggdb")
 SET(CMAKE_CXX_FLAGS_RELEASE "$ENV{CXXFLAGS} -O3 -Wall")
+set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
 
 find_package(OpenCV REQUIRED)
+find_package(Threads REQUIRED)
 
 include_directories(${OpenCV_INCLUDE_DIRS})
 include_directories("include/")
@@ -25,4 +27,5 @@ include("Findpigpio.cmake")
 target_link_libraries(Robot src)
 target_link_libraries(Robot ${OpenCV_LIBS})
 target_link_libraries(Robot ${pigpio_LIBRARY} ${pigpiod_if_LIBRARY} ${pigpiod_if2_LIBRARY})
+target_link_libraries(Robot Threads::Threads)
 

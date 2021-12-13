@@ -4,7 +4,7 @@
 #include "surf.h"
 #include "item.h"
 #define MIN_HESSIAN 400
-#define MIN_FEATURE 20
+#define MIN_FEATURE 25
 
 using namespace cv;
 using namespace std;
@@ -46,12 +46,16 @@ bool feature_algo::match_coord(Mat &src, Mat &pattern, vector<KeyPoint> &kp,vect
 			count++;
 		}
 	}
+	cout << "Feature Points Captured: "<<count<<endl;
 	if (count > MIN_FEATURE)
 	{
 		int xdiff,ydiff;
 		vector<Point2f> pts(2,pt);
 		pts[1].x+=r;	
 		Mat H = findHomography(kp_src, kp_dst, RANSAC);
+		if(H.cols != 3){
+			return false;
+		}
 		perspectiveTransform(pts, pts, H);
 		pt = pts[0];
 		xdiff=(int)(pts[0].x - pts[1].x);
