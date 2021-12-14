@@ -3,7 +3,7 @@
 <html>
 <head>
 
-	<title>ECE 5725 | Item Retriving Robot </title>
+	<title>ECE 5725 | Item Retrieving Robot </title>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.7.0/build/reset-fonts-grids/reset-fonts-grids.css" media="all" />
 	<link rel="stylesheet" type="text/css" href="CSS/report.css" media="all" />
@@ -33,8 +33,12 @@
 								<h2>Introduction</h2> <!--// put your heading here -->
 							</div>
 							<div class="yui-u">
-								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+								<p>According to the name of our final project, Item retrieving robot, our project is to design a robot that can identify items and retrieve them to the designated place. Our project mainly consists of 4 parts:
 								</p> <!--// Put Content here -->
+								<li>1. Target scanning and feature points extracting</li>
+								<li>2. Circuit layout arrangement and chassis control</li>
+								<li>3. Feature loading and target identification</li>
+								<li>4. Operating algorithm and parameters design of the robot</li>
 							</div>
 						</div><!--// Your section has ended -->
 
@@ -43,8 +47,15 @@
 								<h2>Objective</h2> <!--// put your heading here -->
 							</div>
 							<div class="yui-u">
-								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+								<p>The Objective of the project is to design the robot that can retrieve specific items to the designated location. Milestones at each stage are as the following:
 								</p> <!--// Put Content here -->
+								<li>1. Write the scanner program to detect feature points of the target items by the raspberryPi camera and save it as a binary file.
+								</li>
+								<li>2. Write the load program so that when we command the robot to retrieve a specified item, it can load the binary file containing its feature points so that it can calculate the location of the target.</li>
+								<li>3. Using the pigpio library to control the motors and assign the speed and direction of the robot.
+								</li>
+								<li>4. Define home target for the robot so that after finding the target, the robot will automatically search for home and retrieve the item home.
+								</li>
 							</div>
 						</div><!--// Your section has ended -->
 
@@ -53,8 +64,29 @@
 								<h2>Design</h2> <!--// put your heading here -->
 							</div>
 							<div class="yui-u">
-								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+								<p>Feature Detection:<br/>
+									In this project we choose to use Speeded Up Robust Features(SURF) as the algorithm to identify feature points. Because items can be placed in different distances a scale irrelevant feature point algorithm is required. Compared to Scale-invariant feature transform(SIFT), the SURF is faster and still has scale irrelevant features. Considering raspberry pi’s limited performance, we choose SURF.<br/>
+									For every item that is scanned, the scanner program captures all feature points in a designated box on the image camera captured. In order to have different views of an item, the scanner is able to scan several views and store them as a file. The scanner will also store some other important information to the file.<br/>
+								
 								</p> <!--// Put Content here -->
+								<br/>
+								<p>
+									Locating and measuring:<br/>
+									In the beginning, the robot simply matches the feature points of the current image(dest) to the feature points in file(src) and calculates the average coordinates as the center of the object. Yet a single feature point is not guaranteed to be matched so that the number and distribution of matched feature points is unstable. As a result, the center becomes unstable and inaccurate.<br/>
+									Also the diameter of the object needs to be measured to calculate the distance, so another mechanism is applied to calculate the center as well as the diameter: homography. Homography describes the relationship between src feature points and dest feature points with a matrix. So the new center and diameter can be calculated with the homography matrix, which is very accurate and stable by testing.
+
+								</p>
+								<br/>
+								<p>
+									Motor Control:<br/>
+									By controlling the duty cycle of PWM the speed of the motor can be controlled. However because of the fraction, if the speed(duty cycle) is lower than a threshold, the robot car won’t be moving. Another problem is that if the robot is constantly moving the camera will capture blurred images. So instead of controlling the speed, the robot controls the time that motors run at maximum speed. In order to achieve that we included a timer from <a href="https://github.com/99x/timercpp">https://github.com/99x/timercpp</a>. With a timer the robot is able to control the motor asynchronously.<br/>
+
+								</p>
+								<br/>
+								<p>
+									Overall logic:<br/>
+									The robot starts with search mode, searching the item by rotating the robot. Once located the item, the robot moves toward the item and keeps facing the item. When it reaches a certain distance the robot will “rush” to shovel the item. Then it sets home as the target and repeats the process without the final “rush”.
+								</p>
 							</div>
 						</div><!--// Your section has ended -->
 
@@ -63,8 +95,23 @@
 								<h2>Testing</h2> <!--// put your heading here -->
 							</div>
 							<div class="yui-u">
-								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+								<p>In order to check if an item can be appropriately recognized and located, we developed a “loader” program that does feature matching and displays the center and diameter on the screen. If the program can locate the target item from distances, the item is suitable for the robot to pick up if size is also appropriate.
 								</p> <!--// Put Content here -->
+								<p>
+									So first we tested the feature points capture/save/load/match with scanner and loader program to make sure it works correctly. Then we run the motor and test it with motors to really retrieve items. In order to do that we have several adjustment to our previous design, including:
+								</p>
+								<li>
+									1. Use homography to locate the center.
+								</li>
+								<li>
+									2. Uun motor at max speed in given time instead of costum speed.
+								</li>
+								<li>
+									3. Use paper to make a dozer that is able to pick up items with a manual assistant to prevent the item being pushed away instead of falling into the dozer.
+								</li>
+								<li>
+									4. Adjusted several parameters.
+								</li>
 							</div>
 						</div><!--// Your section has ended -->
 
@@ -73,10 +120,10 @@
 								<h2>Drawings</h2> <!--// put your heading here -->
 							</div>
 							<div class="yui-u">
-								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-								</p> <br /> <p> This is an example image  </p> <!--// Put Content here -->
-								<img src="images/incident.png" title="Ha Ha ... that's me" alt="This is a picture" width="420" height="200"/> </p>
-								<p> Credits to XKCD </p>
+								<p>State machine of the robot:</p>
+								<!-- </p> <br /> <p> This is an example image  </p> // Put Content here -->
+								<img src="images/state_machine.png" title="Ha Ha ... that's me" alt="This is a picture" width="420" height="200"/> </>
+								<!-- <p> Credits to XKCD </p> -->
 							</div>
 						</div><!--// Your section has ended -->
 
@@ -85,7 +132,7 @@
 								<h2>Results</h2> <!--// put your heading here -->
 							</div>
 							<div class="yui-u">
-								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+								<p>After all the design and testing, our robot can run as we expected and achieve the main goals. In the demo, we extracted and saved the feature points file of three items: a broken raspberryPi, a raspberryPi screen, a raspberry box, and in the command line, we asked our robot to retrieve the raspberry Pi. The robot then turned in clockwise slowly, ignoring the existence of the other two items. When it faces in the direction of the specified raspberry Pi machine, it will move forward while adjusting the direction. After it detects that the distance is close enough, the robot will rush for a short time to get the item into the shovel. Then it turned in clockwise again searching for home. After it found the direction of home, it will move towards home. If we shift the home to another direction, the robot will turn again and redirect home.
 								</p> <!--// Put Content here -->
 							</div>
 						</div><!--// Your section has ended -->
@@ -95,8 +142,36 @@
 								<h2>Conclusion</h2> <!--// put your heading here -->
 							</div>
 							<div class="yui-u">
-								<p>Yay !!! Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+								<p>Our robot has successfully achieved the goal of scanning the features of items, recognizing the specified items and retrieving items. The robot can run in the speed and direction that we assign, and the accuracy can meet our expectations.
 								</p> <!--// Put Content here -->
+							</div>
+						</div><!--// Your section has ended -->
+
+						<div class="yui-gf"> <!--// This is a section -->
+							<div class="yui-u first">
+								<h2>Future work</h2> <!--// put your heading here -->
+							</div>
+							<div class="yui-u">
+								<p>There are some designs that we are not able to achieve due to the restriction of time and conditions.
+								</p> <!--// Put Content here -->
+								<li>
+									1. At present, we use a handmade shovel to place the item but it is not stable. We can upgrade it to a robot arm so that we can control the arm to grab the item.
+								</li>
+								<li>
+									2. The performance of the raspberry pi is limited because of its limited processors. We can try to use our computer to process the graph so that we can get higher resolution and lower latency.
+								</li>
+							</div>
+						</div><!--// Your section has ended -->
+
+						<div class="yui-gf"> <!--// This is a section -->
+							<div class="yui-u first">
+								<h2>Reference</h2> <!--// put your heading here -->
+							</div>
+							<div class="yui-u">
+								<li>1. <a href="https://github.com/99x/timercpp">https://github.com/99x/timercpp</a></li>
+								<li>2. <a href="https://en.wikipedia.org/wiki/Speeded_up_robust_features">https://en.wikipedia.org/wiki/Speeded_up_robust_features</a></li>
+								<li>3. <a href="https://docs.opencv.org/4.x/db/d27/tutorial_py_table_of_contents_feature2d.html">https://docs.opencv.org/4.x/db/d27/tutorial_py_table_of_contents_feature2d.html</a></li>
+								<li>4. <a href="http://abyz.me.uk/rpi/pigpio/">http://abyz.me.uk/rpi/pigpio/</a></li>
 							</div>
 						</div><!--// Your section has ended -->
 
